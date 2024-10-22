@@ -1,0 +1,28 @@
+name: Deploy to EC2 Server
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup SSH agent
+      uses: webfactory/ssh-agent@v0.8.1
+      with:
+        ssh-private-key: ${{serects.brnyar}}
+
+    - name: Copy files to server
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.54.169.160.4 }}@${{ secrets.ubuntu }} "mkdir -p /var/www/html"
+        scp -r ./ ${{ secrets.54.169.160.4 }}@${{ secrets.ubuntu }}:/var/www/html
+
+    - name: Restart Nginx
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.ubuntu }}@${{ secrets.54.169.160.4 }} "sudo systemctl restart nginx"
