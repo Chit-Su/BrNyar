@@ -39,9 +39,9 @@ define( 'DB_COLLATE', '' );
 
 define( 'FS_METHOD', 'direct' );
 
-define('WP_HOME', 'http://54.169.160.4');
+define('WP_HOME', 'http:// 54.169.10.185');
 
-define('WP_SITEURL', 'http://54.169.160.4');
+define('WP_SITEURL', 'http:// 54.169.10.185');
 
 /**#@+
  * Authentication unique keys and salts.
