@@ -27,8 +27,8 @@ jobs:
       # Step 4: Deploy the code to the server (syncing /var/www/html)
       - name: Deploy to server
         run: |
-          rsync -avz --delete-after --exclude '.git' ./ ubuntu@54.169.217.138:/var/www/html
+          rsync -avz --delete-after --exclude '.git' ./ ubuntu@54.169.10.185:/var/www/develop
       # Step 5 (optional): Set proper permissions on the server
       - name: Set permissions
         run: |
-          ssh ubuntu@54.169.217.138 'sudo chown -R www-data:www-data /var/www/html && sudo chmod -R 755 /var/www/html'
+          ssh ubuntu@54.169.10.185 'sudo chown -R www-data:www-data /var/www/develop && sudo chmod -R 755 /var/www/develop'
