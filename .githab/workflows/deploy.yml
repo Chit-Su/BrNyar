@@ -1,28 +1,34 @@
-name: Deploy to EC2 Server
+name: Deploy WordPress to Ubuntu Server
 
 on:
   push:
     branches:
-      - develop
+      - develop  # Replace with your branch if needed
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      # Step 1: Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup SSH agent
-      uses: webfactory/ssh-agent@v0.8.1
-      with:
-        ssh-private-key: ${{serects.brnyar}}
+      # Step 2: Set up SSH agent to authenticate with your server
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.brnyar }}
 
-    - name: Copy files to server
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.54.169.160.4 }}@${{ secrets.ubuntu }} "mkdir -p /var/www/html"
-        scp -r ./ ${{ secrets.54.169.160.4 }}@${{ secrets.ubuntu }}:/var/www/html
-
-    - name: Restart Nginx
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.ubuntu }}@${{ secrets.54.169.160.4 }} "sudo systemctl restart nginx"
+      # Step 3: Add your server's IP address to known_hosts to prevent SSH from asking for confirmation
+      - name: Add server to known_hosts
+        run: |
+          ssh-keyscan -H 54.169.10.185 >> ~/.ssh/known_hosts
+      # Step 4: Deploy the code to the server (syncing /var/www/html)
+      - name: Deploy to server
+        run: |
+          rsync -avz --delete-after --exclude '.git' ./ ubuntu@54.169.217.138:/var/www/html
+      # Step 5 (optional): Set proper permissions on the server
+      - name: Set permissions
+        run: |
+          ssh ubuntu@54.169.217.138 'sudo chown -R www-data:www-data /var/www/html && sudo chmod -R 755 /var/www/html'
